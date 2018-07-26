@@ -1,4 +1,4 @@
-pragma solidity ^0.4.24;
+pragma experimental ABIEncoderV2;
 
 import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
 import 'zeppelin-solidity/contracts/ownership/NoOwner.sol';
@@ -31,6 +31,22 @@ uint256 public totalDonations;
 
     _createDonation("Genesis Donation", 0, address(0));
     _makeDonation(0, 0, address(0));
+  }
+
+  function batchCreateDonation(
+    string[] _descriptions,
+    uint256[] _goals,
+    address[] _beneficiaries
+  )
+    onlyManagers
+    public
+  {
+    require(_descriptions.length == _goals.length);
+    require(_goals.length == _beneficiaries.length);
+
+    for (uint i = 0; i < _descriptions.length; i++) {
+      createDonation(_descriptions[i], _goals[i], _beneficiaries[i]);
+    }
   }
 
   function createDonation(
